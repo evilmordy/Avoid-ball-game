@@ -3,11 +3,21 @@ DodgeBall.UI = class UI {
     this.overlay = document.getElementById('overlay');
     this.titleEl = document.getElementById('title');
     this.subEl = document.getElementById('subtitle');
+    this.btnGroup = document.getElementById('btn-group');
     this.btn1 = document.getElementById('btn-primary');
     this.btn2 = document.getElementById('btn-secondary');
   }
 
+  _clearButtons() {
+    this.btn1.style.display = 'none';
+    this.btn2.style.display = 'none';
+    while (this.btnGroup.children.length > 2) {
+      this.btnGroup.removeChild(this.btnGroup.lastChild);
+    }
+  }
+
   _show(title, sub, btn1Text, btn1Class, btn1Fn, btn2Text, btn2Class, btn2Fn) {
+    this._clearButtons();
     this.overlay.style.display = 'flex';
     this.titleEl.textContent = title;
     this.subEl.textContent = sub;
@@ -20,9 +30,26 @@ DodgeBall.UI = class UI {
       this.btn2.className = 'btn ' + btn2Class;
       this.btn2.onclick = btn2Fn;
       this.btn2.style.display = 'inline-block';
-    } else {
-      this.btn2.style.display = 'none';
     }
+  }
+
+  showDifficultySelect(onEasy, onNormal, onHard) {
+    this._clearButtons();
+    this.overlay.style.display = 'flex';
+    this.titleEl.textContent = '选择难度';
+    this.subEl.textContent = '决定刷新频率与绿球成长幅度';
+
+    const createBtn = (text, cls, fn) => {
+      const btn = document.createElement('button');
+      btn.textContent = text;
+      btn.className = 'btn ' + cls;
+      btn.onclick = fn;
+      return btn;
+    };
+
+    this.btnGroup.appendChild(createBtn('简  单', 'btn-green', onEasy));
+    this.btnGroup.appendChild(createBtn('常  规', 'btn-primary', onNormal));
+    this.btnGroup.appendChild(createBtn('困  难', 'btn-danger', onHard));
   }
 
   showModeSelect(onSingle, onDual) {

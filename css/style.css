@@ -109,3 +109,15 @@ canvas {
   color: #fff;
   box-shadow: 0 0 24px rgba(255, 68, 68, 0.4);
 }
+
+.btn-green {
+  background: #44ff44;
+  color: #0d0d1a;
+  box-shadow: 0 0 24px rgba(68, 255, 68, 0.4);
+}
+
+.btn-danger {
+  background: #ff4444;
+  color: #fff;
+  box-shadow: 0 0 24px rgba(255, 68, 68, 0.4);
+}

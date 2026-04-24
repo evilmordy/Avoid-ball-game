@@ -12,6 +12,7 @@ DodgeBall.Game = class Game {
     this.spawner = new DodgeBall.Spawner();
 
     this.mode = null;
+    this.difficulty = null;
     this.players = [];
     this.scores = [];
     this.balls = [];
@@ -19,11 +20,36 @@ DodgeBall.Game = class Game {
     this.state = 0;
     this.lastTs = 0;
 
+    this._showDifficultyScreen();
+    requestAnimationFrame((t) => this._loop(t));
+  }
+
+  _applyDifficultyPreset(preset) {
+    const C = DodgeBall.CONFIG;
+    C.balls.green.sizeMultiplier = preset.greenSizeMultiplier;
+    Object.assign(C.spawner, preset.spawner);
+    Object.assign(C.difficulty, preset.difficulty);
+    Object.assign(C.spawnChances, preset.spawnChances);
+    C.players.p1.speed = preset.playerSpeed;
+    C.players.p2.speed = preset.playerSpeed;
+  }
+
+  _showDifficultyScreen() {
+    this.ui.showDifficultySelect(
+      () => this._onDifficulty('easy'),
+      () => this._onDifficulty('normal'),
+      () => this._onDifficulty('hard')
+    );
+  }
+
+  _onDifficulty(key) {
+    this.difficulty = key;
+    const preset = DodgeBall.CONFIG.difficultyPresets[key];
+    this._applyDifficultyPreset(preset);
     this.ui.showModeSelect(
       () => this._start('single'),
       () => this._start('dual')
     );
-    requestAnimationFrame((t) => this._loop(t));
   }
 
   _start(mode) {
@@ -80,10 +106,8 @@ DodgeBall.Game = class Game {
     this.scores = [];
     this.balls = [];
     this.mode = null;
-    this.ui.showModeSelect(
-      () => this._start('single'),
-      () => this._start('dual')
-    );
+    this.difficulty = null;
+    this._showDifficultyScreen();
   }
 
   _loop(ts) {
