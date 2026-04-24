@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>躲避小球</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="container">
+    <canvas id="gameCanvas"></canvas>
+    <div id="overlay">
+      <div class="overlay-content">
+        <h1 id="title"></h1>
+        <p id="subtitle"></p>
+        <div id="btn-group">
+          <button id="btn-primary" class="btn"></button>
+          <button id="btn-secondary" class="btn"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>window.DodgeBall = {};</script>
+  <script src="js/config.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/entities/ball.js"></script>
+  <script src="js/entities/red-ball.js"></script>
+  <script src="js/entities/gold-ball.js"></script>
+  <script src="js/entities/green-ball.js"></script>
+  <script src="js/entities/player.js"></script>
+  <script src="js/collision.js"></script>
+  <script src="js/spawner.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
