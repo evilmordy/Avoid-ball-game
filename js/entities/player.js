@@ -7,11 +7,17 @@ DodgeBall.Player = class Player {
   update(input) {
     let dx = 0;
     let dy = 0;
-    const k = this.cfg.keys;
-    if (input.isDown(k.left))  dx -= 1;
-    if (input.isDown(k.right)) dx += 1;
-    if (input.isDown(k.up))    dy -= 1;
-    if (input.isDown(k.down))  dy += 1;
+
+    if (input.touchActive && this.cfg.keys.left === 'ArrowLeft') {
+      dx = input.touchDX;
+      dy = input.touchDY;
+    } else {
+      const k = this.cfg.keys;
+      if (input.isDown(k.left))  dx -= 1;
+      if (input.isDown(k.right)) dx += 1;
+      if (input.isDown(k.up))    dy -= 1;
+      if (input.isDown(k.down))  dy += 1;
+    }
 
     if (dx !== 0 && dy !== 0) {
       const diag = 1 / Math.SQRT2;

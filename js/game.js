@@ -8,7 +8,7 @@ DodgeBall.Game = class Game {
 
     this.renderer = new DodgeBall.Renderer(this.canvas);
     this.ui = new DodgeBall.UI();
-    this.input = new DodgeBall.Input();
+    this.input = new DodgeBall.Input(this.canvas);
     this.spawner = new DodgeBall.Spawner();
 
     this.mode = null;
@@ -176,6 +176,7 @@ DodgeBall.Game = class Game {
     this.renderer.drawGrid();
     for (const b of this.balls) this.renderer.drawBall(b);
     for (const p of this.players) this.renderer.drawPlayer(p);
+    this.renderer.drawJoystick(this.input);
     this.renderer.drawHUD(this.scores, this.gameTime, this.mode);
   }
 };

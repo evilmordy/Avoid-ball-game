@@ -57,6 +57,30 @@ DodgeBall.Renderer = class Renderer {
     ctx.restore();
   }
 
+  drawJoystick(input) {
+    if (!input.touchActive) return;
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(input.touchCX, input.touchCY, input.touchR, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.beginPath();
+    ctx.arc(input.touchCX, input.touchCY, input.touchR, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.shadowColor = 'rgba(255,255,255,0.3)';
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    ctx.arc(input.touchKnobCX, input.touchKnobCY, 18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
   drawHUD(scores, time, mode) {
     const ctx = this.ctx;
     ctx.save();
