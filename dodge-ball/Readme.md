@@ -1,6 +1,6 @@
 # 躲避小球小游戏
 
-双击index.html即可在浏览器游玩
+双击dodge-ball/index.html即可在浏览器游玩
 
 ## 怎么玩
 
