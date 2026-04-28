@@ -8,9 +8,9 @@ DodgeBall.Ball = class Ball {
     this.color = color;
   }
 
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
+  update(speedMul = 1, dt = 16.667) {
+    this.x += this.vx * speedMul;
+    this.y += this.vy * speedMul;
   }
 
   isOffScreen(w, h) {

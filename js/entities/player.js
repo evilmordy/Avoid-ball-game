@@ -4,7 +4,22 @@ DodgeBall.Player = class Player {
     this.reset();
   }
 
+  reset() {
+    const C = DodgeBall.CONFIG;
+    this.x = C.canvas.width / 2;
+    this.y = C.canvas.height / 2;
+    this.size = this.cfg.size;
+    this.speed = this.cfg.speed;
+    this.color = this.cfg.color;
+    this.dead = false;
+    this.hp = C.players.maxHP;
+    this.maxHP = C.players.maxHP;
+    this._fx = {};
+  }
+
   update(input) {
+    if (this.dead) return;
+
     let dx = 0;
     let dy = 0;
 
@@ -20,31 +35,51 @@ DodgeBall.Player = class Player {
     }
 
     if (dx !== 0 && dy !== 0) {
-      const diag = 1 / Math.SQRT2;
-      dx *= diag;
-      dy *= diag;
+      const d = 1 / Math.SQRT2;
+      dx *= d;
+      dy *= d;
     }
 
+    let spd = this.speed;
+    const sp = this._fx.speed;
+    if (sp) spd *= sp.multiplier;
+
     const C = DodgeBall.CONFIG;
-    this.x += dx * this.speed;
-    this.y += dy * this.speed;
+    this.x += dx * spd;
+    this.y += dy * spd;
 
     const half = this.size / 2;
     this.x = Math.max(half, Math.min(C.canvas.width - half, this.x));
     this.y = Math.max(half, Math.min(C.canvas.height - half, this.y));
+
+    this._tickFx();
   }
 
-  enlarge(multiplier) {
-    this.size = Math.min(this.size * multiplier, DodgeBall.CONFIG.players.maxSize);
+  _tickFx() {
+    for (const k of Object.keys(this._fx)) {
+      this._fx[k].life -= 16.667;
+      if (this._fx[k].life <= 0) delete this._fx[k];
+    }
   }
 
-  reset() {
-    const C = DodgeBall.CONFIG;
-    this.x = C.canvas.width / 2;
-    this.y = C.canvas.height / 2;
-    this.size = this.cfg.size;
-    this.speed = this.cfg.speed;
-    this.color = this.cfg.color;
-    this.dead = false;
+  applyPowerup(type, cfg) {
+    if (type === 'shrink') {
+      this.size = Math.max(8, this.size * cfg.factor);
+      return;
+    }
+    this._fx[type] = { life: cfg.duration, multiplier: cfg.multiplier || 1 };
+  }
+
+  get hasShield() { return !!this._fx.shield; }
+
+  takeDamage() {
+    if (this.hp <= 0) return false;
+    this.hp--;
+    if (this.hp <= 0) { this.dead = true; return false; }
+    return true;
+  }
+
+  enlarge(m) {
+    this.size = Math.min(this.size * m, DodgeBall.CONFIG.players.maxSize);
   }
 };
