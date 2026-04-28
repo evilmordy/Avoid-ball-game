@@ -74,6 +74,7 @@ DodgeBall.Game = class Game {
     Object.assign(C.spawner, p.spawner);
     Object.assign(C.difficulty, p.difficulty);
     Object.assign(C.spawnChances, p.spawnChances);
+    if (p.powerups) Object.assign(C.powerups, p.powerups);
     C.players.p1.speed = p.playerSpeed;
     C.players.p2.speed = p.playerSpeed;
   }
@@ -221,7 +222,7 @@ DodgeBall.Game = class Game {
     }
 
     if (this.spawner.shouldSpawnPowerup(now)) {
-      const pw = this.spawner.spawnPowerup();
+      const pw = this.spawner.spawnPowerup(this.spawner.elapsed);
       if (pw) { this.powerups.push(pw); this.spawner.lastPowerupSpawn = now; }
     }
 

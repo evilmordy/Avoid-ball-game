@@ -1,8 +1,8 @@
 DodgeBall.TrackingBall = class TrackingBall extends DodgeBall.Ball {
-  constructor(x, y, vx, vy) {
+  constructor(x, y, vx, vy, speed) {
     const C = DodgeBall.CONFIG;
     super(x, y, vx, vy, C.balls.tracking.radius, C.balls.tracking.color);
-    this.baseSpeed = C.balls.tracking.speed;
+    this.baseSpeed = speed || C.balls.tracking.speed;
     this._tx = 0;
     this._ty = 0;
   }

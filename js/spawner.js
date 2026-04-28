@@ -18,18 +18,30 @@ DodgeBall.Spawner = class Spawner {
   get ballSpeed() {
     const C = DodgeBall.CONFIG;
     const lvl = Math.floor(this.elapsed / C.difficulty.speedIncreaseInterval);
-    return C.difficulty.initialBallSpeed + lvl * C.difficulty.speedIncrease;
+    const raw = C.difficulty.initialBallSpeed + lvl * C.difficulty.speedIncrease;
+    const cap = C.players.p1.speed * C.difficulty.ballSpeedCap;
+    return Math.min(raw, cap);
+  }
+
+  get trackingSpeed() {
+    const C = DodgeBall.CONFIG;
+    const lvl = Math.floor(this.elapsed / C.difficulty.trackingSpeedInterval);
+    const raw = C.difficulty.trackingSpeedBase + lvl * C.difficulty.trackingSpeedIncrease;
+    const cap = C.players.p1.speed * C.difficulty.ballSpeedCap;
+    return Math.min(raw, cap);
   }
 
   get powerupInterval() {
     const C = DodgeBall.CONFIG;
-    const lvl = Math.floor(this.elapsed / 15000);
-    return Math.max(C.powerups.minSpawnInterval, C.powerups.spawnInterval - lvl * 500);
+    const t = this.elapsed;
+    const start = C.powerups.spawnInterval;
+    const end = C.powerups.maxSpawnInterval;
+    const ramp = C.powerups.rampTime;
+    if (t >= ramp) return end;
+    return start + (end - start) * (t / ramp);
   }
 
-  update(dt) {
-    this.elapsed += dt;
-  }
+  update(dt) { this.elapsed += dt; }
 
   shouldSpawn(now) { return now - this.lastSpawn >= this.interval; }
   shouldSpawnPowerup(now) { return now - this.lastPowerupSpawn >= this.powerupInterval; }
@@ -38,8 +50,7 @@ DodgeBall.Spawner = class Spawner {
     const C = DodgeBall.CONFIG;
     const edge = Math.floor(Math.random() * 4);
     const spd = this.ballSpeed;
-    const W = C.canvas.width;
-    const H = C.canvas.height;
+    const W = C.canvas.width, H = C.canvas.height;
     const m = 30;
     let x, y, vx, vy;
 
@@ -50,8 +61,7 @@ DodgeBall.Spawner = class Spawner {
       case 3: x = -m; y = Math.random() * H; vx = spd; vy = (Math.random() - 0.5) * spd * 0.6; break;
     }
 
-    const dx = x - px;
-    const dy = y - py;
+    const dx = x - px, dy = y - py;
     const dist = Math.sqrt(dx * dx + dy * dy);
     if (dist < C.spawner.minSpawnDistance) {
       const nd = C.spawner.minSpawnDistance;
@@ -67,11 +77,13 @@ DodgeBall.Spawner = class Spawner {
     }
     if (r < ch.red + ch.gold) return new DodgeBall.GoldBall(x, y, vx, vy);
     if (r < ch.red + ch.gold + ch.green) return new DodgeBall.GreenBall(x, y, vx, vy);
-    if (r < ch.red + ch.gold + ch.green + ch.tracking) return new DodgeBall.TrackingBall(x, y, vx, vy);
+    if (r < ch.red + ch.gold + ch.green + ch.tracking) {
+      return new DodgeBall.TrackingBall(x, y, vx, vy, this.trackingSpeed);
+    }
     return new DodgeBall.SplitBall(x, y, vx, vy);
   }
 
-  spawnPowerup() {
+  spawnPowerup(elapsed) {
     const C = DodgeBall.CONFIG;
     const x = 60 + Math.random() * (C.canvas.width - 120);
     const y = 60 + Math.random() * (C.canvas.height - 120);
@@ -81,6 +93,11 @@ DodgeBall.Spawner = class Spawner {
     if (r < w.shield) type = 'shield';
     else if (r < w.shield + w.speed) type = 'speed';
     else type = 'shrink';
-    return new DodgeBall.PowerUp(x, y, type, C.powerups.types[type]);
+
+    let cfg = C.powerups.types[type];
+    if (type === 'shield' && elapsed >= C.powerups.shieldDropTime) {
+      cfg = { duration: C.powerups.shieldDropDuration, color: cfg.color, label: cfg.label };
+    }
+    return new DodgeBall.PowerUp(x, y, type, cfg);
   }
 };
