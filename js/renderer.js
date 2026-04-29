@@ -98,17 +98,33 @@ DodgeBall.Renderer = class Renderer {
       ctx.save();
       ctx.translate(pw.x, pw.y);
       ctx.scale(pw.pulseScale, pw.pulseScale);
-      ctx.beginPath();
-      ctx.arc(0, 0, pw.radius, 0, Math.PI * 2);
+
       ctx.fillStyle = pw.color;
       ctx.globalAlpha = 0.2;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-      ctx.strokeStyle = pw.color;
-      ctx.lineWidth = 2;
       ctx.shadowColor = pw.color;
       ctx.shadowBlur = 10;
-      ctx.stroke();
+
+      if (pw.type === 'heal') {
+        ctx.beginPath();
+        ctx.moveTo(0, 4);
+        ctx.bezierCurveTo(-8, -6, -14, 2, 0, 10);
+        ctx.bezierCurveTo(14, 2, 8, -6, 0, 4);
+        ctx.fill();
+        ctx.strokeStyle = pw.color;
+        ctx.lineWidth = 2;
+        ctx.globalAlpha = 1;
+        ctx.stroke();
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, pw.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = pw.color;
+        ctx.lineWidth = 2;
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 10;
+        ctx.stroke();
+      }
+
       ctx.shadowBlur = 0;
       ctx.fillStyle = '#fff';
       ctx.font = 'bold 14px "Courier New", sans-serif';

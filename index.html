@@ -7,14 +7,16 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <canvas id="bgCanvas"></canvas>
   <div id="container">
     <canvas id="gameCanvas"></canvas>
     <button id="mobile-pause-btn">&#9646;&#9646;</button>
     <div id="overlay">
       <div class="overlay-content">
-        <div id="rules"></div>
         <h1 id="title"></h1>
+        <p class="sub-en" id="subtitleEn"></p>
         <p id="subtitle"></p>
+        <div id="rules"></div>
         <div id="btn-group">
           <button id="btn-primary" class="btn"></button>
           <button id="btn-secondary" class="btn"></button>
@@ -38,6 +40,7 @@
   <script src="js/spawner.js"></script>
   <script src="js/renderer.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/effects.js"></script>
   <script src="js/game.js"></script>
   <script src="js/main.js"></script>
 </body>

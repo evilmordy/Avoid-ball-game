@@ -29,22 +29,24 @@ DodgeBall.CONFIG = {
   difficulty: {
     initialBallSpeed: 2, speedIncrease: 0.4, speedIncreaseInterval: 15000,
     ballSpeedCap: 0.8,
-    trackingSpeedBase: 1.5, trackingSpeedIncrease: 0.3, trackingSpeedInterval: 15000
+    trackingSpeedBase: 1.2, trackingSpeedIncrease: 0.25, trackingSpeedInterval: 15000,
+    trackingSpeedCap: 0.55
   },
 
   spawnChances: {
-    red: 0.45, gold: 0.25, green: 0.15, tracking: 0.10, split: 0.05
+    red: 0.45, gold: 0.25, green: 0.15, tracking: 0.08, split: 0.07
   },
 
   powerups: {
-    spawnInterval: 8000, maxSpawnInterval: 22000, rampTime: 300000,
+    spawnInterval: 10000, maxSpawnInterval: 25000, rampTime: 300000,
     shieldDropTime: 240000, shieldDropDuration: 6000,
     types: {
       shield: { duration: 10000, color: '#44aaff', label: 'S' },
       speed:  { duration: 4500, multiplier: 1.5, color: '#ffff44', label: 'Z' },
-      shrink: { duration: 0, factor: 0.65, color: '#44ff88', label: 'V' }
+      shrink: { duration: 0, factor: 0.65, color: '#44ff88', label: 'V' },
+      heal:   { duration: 0, color: '#ff4466', label: 'H' }
     },
-    weights: { shield: 0.35, speed: 0.35, shrink: 0.30 }
+    weights: { shield: 0.24, speed: 0.22, shrink: 0.20, heal: 0.34 }
   },
 
   difficultyPresets: {
@@ -53,10 +55,13 @@ DodgeBall.CONFIG = {
       spawner: { initialInterval: 1500, minInterval: 500, intervalDecrease: 60, levelUpTime: 12000 },
       difficulty: {
         initialBallSpeed: 1.5, speedIncrease: 0.3, speedIncreaseInterval: 18000,
-        ballSpeedCap: 0.7, trackingSpeedBase: 1.2, trackingSpeedIncrease: 0.2, trackingSpeedInterval: 18000
+        ballSpeedCap: 0.65,
+        trackingSpeedBase: 0.8, trackingSpeedIncrease: 0.1, trackingSpeedInterval: 20000,
+        trackingSpeedCap: 0.4
       },
-      spawnChances: { red: 0.40, gold: 0.35, green: 0.15, tracking: 0.08, split: 0.02 },
-      powerups: { spawnInterval: 10000, maxSpawnInterval: 25000, shieldDropTime: 300000, shieldDropDuration: 8000 },
+      spawnChances: { red: 0.40, gold: 0.35, green: 0.16, tracking: 0.05, split: 0.04 },
+      powerups: { spawnInterval: 8000, maxSpawnInterval: 20000, shieldDropTime: 360000, shieldDropDuration: 10000 },
+      powerupWeights: { shield: 0.26, speed: 0.18, shrink: 0.14, heal: 0.42 },
       playerSpeed: 5
     },
     normal: {
@@ -64,10 +69,13 @@ DodgeBall.CONFIG = {
       spawner: { initialInterval: 1200, minInterval: 350, intervalDecrease: 80, levelUpTime: 10000 },
       difficulty: {
         initialBallSpeed: 2, speedIncrease: 0.4, speedIncreaseInterval: 15000,
-        ballSpeedCap: 0.8, trackingSpeedBase: 1.5, trackingSpeedIncrease: 0.3, trackingSpeedInterval: 15000
+        ballSpeedCap: 0.75,
+        trackingSpeedBase: 1.2, trackingSpeedIncrease: 0.25, trackingSpeedInterval: 15000,
+        trackingSpeedCap: 0.55
       },
-      spawnChances: { red: 0.45, gold: 0.25, green: 0.15, tracking: 0.10, split: 0.05 },
-      powerups: { spawnInterval: 8000, maxSpawnInterval: 22000, shieldDropTime: 240000, shieldDropDuration: 6000 },
+      spawnChances: { red: 0.45, gold: 0.25, green: 0.15, tracking: 0.08, split: 0.07 },
+      powerups: { spawnInterval: 10000, maxSpawnInterval: 25000, shieldDropTime: 240000, shieldDropDuration: 6000 },
+      powerupWeights: { shield: 0.24, speed: 0.22, shrink: 0.20, heal: 0.34 },
       playerSpeed: 5
     },
     hard: {
@@ -75,10 +83,13 @@ DodgeBall.CONFIG = {
       spawner: { initialInterval: 900, minInterval: 200, intervalDecrease: 100, levelUpTime: 8000 },
       difficulty: {
         initialBallSpeed: 2.5, speedIncrease: 0.5, speedIncreaseInterval: 12000,
-        ballSpeedCap: 0.85, trackingSpeedBase: 1.8, trackingSpeedIncrease: 0.4, trackingSpeedInterval: 12000
+        ballSpeedCap: 0.85,
+        trackingSpeedBase: 1.5, trackingSpeedIncrease: 0.35, trackingSpeedInterval: 12000,
+        trackingSpeedCap: 0.65
       },
-      spawnChances: { red: 0.55, gold: 0.15, green: 0.10, tracking: 0.12, split: 0.08 },
-      powerups: { spawnInterval: 6000, maxSpawnInterval: 18000, shieldDropTime: 180000, shieldDropDuration: 5000 },
+      spawnChances: { red: 0.55, gold: 0.15, green: 0.10, tracking: 0.10, split: 0.10 },
+      powerups: { spawnInterval: 12000, maxSpawnInterval: 28000, shieldDropTime: 180000, shieldDropDuration: 4000 },
+      powerupWeights: { shield: 0.20, speed: 0.26, shrink: 0.28, heal: 0.26 },
       playerSpeed: 4.5
     }
   },

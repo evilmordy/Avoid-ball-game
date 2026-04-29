@@ -27,7 +27,7 @@ DodgeBall.Spawner = class Spawner {
     const C = DodgeBall.CONFIG;
     const lvl = Math.floor(this.elapsed / C.difficulty.trackingSpeedInterval);
     const raw = C.difficulty.trackingSpeedBase + lvl * C.difficulty.trackingSpeedIncrease;
-    const cap = C.players.p1.speed * C.difficulty.ballSpeedCap;
+    const cap = C.players.p1.speed * C.difficulty.trackingSpeedCap;
     return Math.min(raw, cap);
   }
 
@@ -83,16 +83,29 @@ DodgeBall.Spawner = class Spawner {
     return new DodgeBall.SplitBall(x, y, vx, vy);
   }
 
-  spawnPowerup(elapsed) {
+  spawnPowerup(elapsed, trackingCount) {
     const C = DodgeBall.CONFIG;
     const x = 60 + Math.random() * (C.canvas.width - 120);
     const y = 60 + Math.random() * (C.canvas.height - 120);
+
+    let w = Object.assign({}, C.powerups.weights);
+    if (trackingCount > 0) {
+      const b = Math.min(trackingCount, 4);
+      w.heal   = Math.min(0.60, w.heal   + b * 0.10);
+      w.shield = Math.min(0.45, w.shield + b * 0.06);
+      const overflow = (w.shield + w.speed + w.shrink + w.heal) - 1.0;
+      if (overflow > 0.001) {
+        w.shrink = Math.max(0.05, w.shrink - overflow * 0.5);
+        w.speed  = Math.max(0.05, w.speed  - overflow * 0.5);
+      }
+    }
+
     const r = Math.random();
-    const w = C.powerups.weights;
     let type;
     if (r < w.shield) type = 'shield';
     else if (r < w.shield + w.speed) type = 'speed';
-    else type = 'shrink';
+    else if (r < w.shield + w.speed + w.shrink) type = 'shrink';
+    else type = 'heal';
 
     let cfg = C.powerups.types[type];
     if (type === 'shield' && elapsed >= C.powerups.shieldDropTime) {

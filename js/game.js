@@ -37,6 +37,27 @@ DodgeBall.Game = class Game {
     this._resizeCanvas();
     window.addEventListener('resize', () => this._resizeCanvas());
 
+    const bg = document.getElementById('bgCanvas');
+    this.effects = new DodgeBall.Effects(bg);
+    this.effects.start();
+    window.addEventListener('resize', () => this.effects.resize());
+    document.addEventListener('mousemove', (e) => this.effects.move(e.clientX, e.clientY));
+    document.addEventListener('click', (e) => this.effects.ripple(e.clientX, e.clientY));
+
+    this.bgmMenu = new Audio('assets/bgm2.ogg');
+    this.bgmMenu.loop = true;
+    this.bgmMenu.volume = 0.35;
+
+    this.bgmGame = new Audio('assets/bgm.mp3');
+    this.bgmGame.loop = true;
+    this.bgmGame.volume = 0.4;
+
+    const firstPlay = () => {
+      this.bgmMenu.play().catch(() => {});
+      document.removeEventListener('click', firstPlay);
+    };
+    document.addEventListener('click', firstPlay);
+
     this._showDifficultyScreen();
     requestAnimationFrame((t) => this._loop(t));
   }
@@ -75,6 +96,7 @@ DodgeBall.Game = class Game {
     Object.assign(C.difficulty, p.difficulty);
     Object.assign(C.spawnChances, p.spawnChances);
     if (p.powerups) Object.assign(C.powerups, p.powerups);
+    if (p.powerupWeights) Object.assign(C.powerups.weights, p.powerupWeights);
     C.players.p1.speed = p.playerSpeed;
     C.players.p2.speed = p.playerSpeed;
   }
@@ -89,6 +111,8 @@ DodgeBall.Game = class Game {
 
   _onDifficulty(key) {
     this._applyDifficulty(DodgeBall.CONFIG.difficultyPresets[key]);
+    this.bgmGame.pause();
+    if (this.bgmMenu.paused) this.bgmMenu.play().catch(() => {});
     this.ui.showModeSelect(
       () => this._start('single'),
       () => this._start('dual'),
@@ -130,12 +154,17 @@ DodgeBall.Game = class Game {
 
     this.ui.hide();
     this.ui.showPauseBtn(() => this._pause());
+
+    this.bgmMenu.pause();
+    this.bgmGame.currentTime = 0;
+    this.bgmGame.play().catch(() => {});
   }
 
   _pause() {
     this.state = 2;
     this.ui.hidePauseBtn();
     this.ui.showPaused(() => this._resume());
+    this.bgmGame.pause();
   }
 
   _resume() {
@@ -143,11 +172,15 @@ DodgeBall.Game = class Game {
     this.lastTs = performance.now();
     this.ui.hide();
     this.ui.showPauseBtn(() => this._pause());
+    this.bgmGame.play().catch(() => {});
   }
 
   _over(isWin) {
     this.state = 3;
     this.ui.hidePauseBtn();
+    this.bgmGame.pause();
+    this.bgmMenu.currentTime = 0;
+    this.bgmMenu.play().catch(() => {});
     const t = Math.floor(this.gameTime);
     let text;
     if (this.mode === 'dual') {
@@ -222,7 +255,8 @@ DodgeBall.Game = class Game {
     }
 
     if (this.spawner.shouldSpawnPowerup(now)) {
-      const pw = this.spawner.spawnPowerup(this.spawner.elapsed);
+      const tc = this.balls.filter(b => b.type === 'tracking').length;
+      const pw = this.spawner.spawnPowerup(this.spawner.elapsed, tc);
       if (pw) { this.powerups.push(pw); this.spawner.lastPowerupSpawn = now; }
     }
 

@@ -67,6 +67,10 @@ DodgeBall.Player = class Player {
       this.size = Math.max(8, this.size * cfg.factor);
       return;
     }
+    if (type === 'heal') {
+      this.hp = Math.min(this.hp + 1, this.maxHP);
+      return;
+    }
     this._fx[type] = { life: cfg.duration, multiplier: cfg.multiplier || 1 };
   }
 
